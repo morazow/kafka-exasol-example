@@ -29,7 +29,7 @@ $ cd /test/ && ./create_tables.sh
 Then open another terminal and upload connecter configuration file to kafka connect:
 
 ```bash
-$ curl -X PUT exasol-source.json localhost:9092/connectors
+$ curl -X PUT exasol-source.json localhost:8083/connectors
 
 # You can see all available connectors with command:
 # 

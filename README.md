@@ -5,8 +5,6 @@ This is an example repository to show how to setup Kafka Exasol Connector.
 We are going to use Kafka JDBC Connector with Exasol dialect which is currently in early stages.
 Therefore, please bear in mind that this is a work in progress at the moment.
 
----
-
 ## QuickStart
 
 First let us clone the repository and start the services using docker and docker-compose:
@@ -57,5 +55,3 @@ $ kafka-console-consumer --bootstrap-server kafka01.internal-service:9092 --from
 
 You should see two records we inserted on other terminal. Similarly, if you insert new records
 into `country` table in Exasol, they should be listed on kafka console consumer.
-
----

@@ -1,5 +1,5 @@
 {
-  "name": "source-exasol",
+  "name": "exasol-source",
   "config": {
     "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
     "tasks.max": "1",
@@ -7,6 +7,6 @@
     "mode": "timestamp+incrementing",
     "timestamp.column.name": "UPDATED_AT",
     "incrementing.column.name": "ID",
-    "topic.prefix": "exasol_"
+    "topic.prefix": "EXASOL_"
   }
 }

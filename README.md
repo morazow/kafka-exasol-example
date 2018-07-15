@@ -3,7 +3,9 @@
 This is an example repository to show how to setup Kafka Exasol Connector.
 
 We are going to use Kafka JDBC Connector with Exasol dialect which is currently in early stages.
-Therefore, please bear in mind that this is work in progress currently.
+Therefore, please bear in mind that this is a work in progress at the moment.
+
+---
 
 ## QuickStart
 
@@ -26,20 +28,34 @@ $ docker exec -it exasol-db /bin/bash
 $ cd /test/ && ./create_tables.sh 
 ```
 
-Then open another terminal and upload connecter configuration file to kafka connect:
+This creates a `country` table inside `country_schema` and insert couple records into it.
+
+Once the table is created, then open another terminal and upload connecter configuration file to
+kafka connect:
 
 ```bash
-$ curl -X PUT exasol-source.json localhost:8083/connectors
+$ curl -X POST -H "Content-Type: application/json" --data @exasol-source.json localhost:8083/connectors
 
-# You can see all available connectors with command:
-# 
-# Similarly, you can list all available connectors with command:
-#
+# You can see all available connectors with the command:
+# $ curl localhost:8083/connectors/
+# Similarly, you can see the status of a connector with the command:
+# $ curl localhost:8083/connectors/exasol-source/status
 ```
 
-Now let's consume the data from Kafka. For the purpose of this example we are goint to use kafka
+Now let's consume the data from Kafka. For the purpose of this example we are going to use kafka
 console consumer:
 
 ```bash
+$ docker exec -it kafka02 /bin/bash
 
+# List available Kafka topics, we should our 'EXASOL_COUNTRY' listed.
+$ kafka-topics --list --zookeeper zookeeper.internal-service
+
+# Start kafka console consumer
+$ kafka-console-consumer --bootstrap-server kafka01.internal-service:9092 --from-beginning --topic EXASOL_COUNTRY
 ```
+
+You should see two records we inserted on other terminal. Similarly, if you insert new records
+into `country` table in Exasol, they should be listed on kafka console consumer.
+
+---

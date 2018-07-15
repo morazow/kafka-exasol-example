@@ -18,7 +18,7 @@ $ docker-compose up
 ```
 
 Now let's create a Exasol schema and add some records.  This should happen before Kafka connector
-configurations because kafka immediately starts to look for the Exasol tables.
+configurations setup because kafka immediately starts to look for the Exasol tables.
 
 ```bash
 $ docker exec -it exasol-db /bin/bash

@@ -47,7 +47,7 @@ console consumer:
 $ docker exec -it kafka02 /bin/bash
 
 # List available Kafka topics, we should our 'EXASOL_COUNTRY' listed.
-$ kafka-topics --list --zookeeper zookeeper.internal-service
+$ kafka-topics --list --zookeeper zookeeper.internal-service:2181
 
 # Start kafka console consumer
 $ kafka-console-consumer --bootstrap-server kafka01.internal-service:9092 --from-beginning --topic EXASOL_COUNTRY

@@ -10,6 +10,7 @@ this is a work in progress at the moment.
 ## Table of Contents
 
 * [Quick Start](#quick-start)
+* [Dependencies and Services](#dependencies-and-services)
 * [Gotchas](#gotchas)
 * [License](#license)
 
@@ -88,6 +89,39 @@ kafka-console-consumer \
   insert new records into `country` table in Exasol, they should be listed on
   kafka consumer console.
 
+## Dependencies and Services
+
+For this example setup we depend on two jar files:
+
+* [Exasol JDBC Driver][exa-jdbc-driver]
+* [Kafka Connect JDBC Connector][kafka-connect-jdbc]
+
+The two artifacts are put into correct folders so that Kafka Connect can find
+them:
+
+```dockerfile
+RUN cp /jars/exasol-jdbc-6.0.8.jar /usr/share/java/kafka-connect-jdbc/
+RUN cp /jars/kafka-connect-jdbc-5.1.0.jar /usr/share/java/kafka-connect-jdbc/
+RUN rm /usr/share/java/kafka-connect-jdbc/kafka-connect-jdbc-4.1.1.jar
+```
+
+Currently, Exasol dialect is not merged to Kafka JDBC repository; therefore, I
+have custom compiled the jar with Exasol dialect included. **We are going to
+send a pull request, once it is merged, only Kafka Connect setup would be
+sufficient**.
+
+Additionally, we are using docker-compose based Exasol and Kafka Connect
+services. The Kafka Connect is configured for [distributed
+mode][kafka-dist-mode].
+
+| Service Name | Versions | Description |
+| :---         | :---     | :---        |
+| `exasol-db` | [dockerhub/exasol/docker-db:6.0.10-d1][dh-exadb] | An Exasol docker db. Please note that we use stand-alone cluster mode. |
+| `zookeeper` | [dockerhub/confluentinc/cp-zookeeper:4.1.1][dh-cpzk] | A single node zookeeper instance. |
+| `kafka` | [dockerhub/confluentinc/cp-kafka:4.1.1][dh-cpkf] | A kafka instance. We have three kafka node setup. |
+| `schema-registry` | [dockerhub/confluentinc/cp-schema-registry:4.1.1][dh-cpsr] | A schema-registry instance. |
+| `kafka-connect` | [kafka-connect-image/Dockerfile](kafka-connect-image/Dockerfile) | Custom configured kafka-connect instance. |
+
 ## Gotchas
 
 There are several tips and tricks to consider when setting up the Kafka Exasol
@@ -101,11 +135,21 @@ connector.
   systems. That is in jdbc connectors each table is sourced per partition then
   handled by single task.
 
+* The `incrementing` or `timestamp` column names in Kafka Connect configuration,
+  should have a `NOT NULL` constraint when creating a table definition.
+
 ## License
 
 [BSD 3-Clause "New" or "Revised" License](LICENSE)
 
-[kafka-connect]: http://kafka.apache.org/documentation.html#connect
 [kafka-jdbc]: https://github.com/confluentinc/kafka-connect-jdbc
+[kafka-connect]: http://kafka.apache.org/documentation.html#connect
+[kafka-dist-mode]: https://docs.confluent.io/current/connect/userguide.html#distributed-mode
 [docker]: https://www.docker.com/
 [docker-compose]: https://docs.docker.com/compose/
+[dh-exadb]: https://hub.docker.com/r/exasol/docker-db/
+[dh-cpzk]: https://hub.docker.com/r/confluentinc/cp-zookeeper/
+[dh-cpkf]: https://hub.docker.com/r/confluentinc/cp-kafka/
+[dh-cpsr]: https://hub.docker.com/r/confluentinc/cp-schema-registry/
+[kafka-connect-jdbc]: https://github.com/confluentinc/kafka-connect-jdbc
+[exa-jdbc-driver]: https://maven.exasol.com/artifactory/webapp/#/artifacts/browse/tree/General/exasol-releases/com/exasol/exasol-jdbc/6.0.8/exasol-jdbc-6.0.8.jar

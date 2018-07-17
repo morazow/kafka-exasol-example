@@ -88,6 +88,18 @@ kafka-console-consumer \
   insert new records into `country` table in Exasol, they should be listed on
   kafka consumer console.
 
+* In order to the console results in a structured way, you can consume them
+  using Avro console consumer from `schema-registry` container:
+
+```bash
+docker exec -it schema-registry /bin/bash
+
+kafka-avro-console-consumer \
+    --bootstrap-server kafka01.internal:9092 \
+    --from-beginning \
+    --topic EXASOL_COUNTRY
+```
+
 ## Dependencies and Services
 
 For this example setup we depend on two jar files:

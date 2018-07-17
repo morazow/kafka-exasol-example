@@ -12,7 +12,6 @@ this is a work in progress at the moment.
 * [Quick Start](#quick-start)
 * [Dependencies and Services](#dependencies-and-services)
 * [Gotchas](#gotchas)
-* [License](#license)
 
 ## Quick Start
 
@@ -137,10 +136,6 @@ connector.
 
 * The `incrementing` or `timestamp` column names in Kafka Connect configuration,
   should have a `NOT NULL` constraint when creating a table definition.
-
-## License
-
-[BSD 3-Clause "New" or "Revised" License](LICENSE)
 
 [kafka-jdbc]: https://github.com/confluentinc/kafka-connect-jdbc
 [kafka-connect]: http://kafka.apache.org/documentation.html#connect
